@@ -33,16 +33,17 @@ logger.Information("Starting application...");
 
 string webFormsPath = Path.Combine(Environment.CurrentDirectory, "Webforms");
 
+logger.Information("CurrentDirectory {CurrentDirectory}", Environment.CurrentDirectory);
 
 logger.Information("webFormsPath {webFormsPath}", webFormsPath);
 
 
-var legacyAspNetInitializationOptions = new LegacyAspNetInitializationOptions(virtualPath: "/forms", physicalPath: Path.Combine(Environment.CurrentDirectory, "forms"));
+var legacyAspNetInitializationOptions = new LegacyAspNetInitializationOptions(virtualPath: "/forms/", physicalPath: Path.Combine(Environment.CurrentDirectory, "forms"));
 
-//legacyAspNetInitializationOptions = new LegacyAspNetInitializationOptions(legacyAspNetInitializationOptions)
-//{
-//	CustomBinDirectory = Environment.CurrentDirectory
-//};
+legacyAspNetInitializationOptions = new LegacyAspNetInitializationOptions(legacyAspNetInitializationOptions)
+{
+	CustomBinDirectory = Path.Combine(Environment.CurrentDirectory, "bin")
+};
 
 LegacyAspNetInitialization.Initialize(legacyAspNetInitializationOptions);
 
@@ -87,11 +88,11 @@ try
 
 	app.MapGet("/webform", context =>
 	{
-		context.Response.Redirect("Default.aspx");
+		context.Response.Redirect("forms/Default.aspx");
 		return Task.CompletedTask;
 	});
 
-	app.MapLegacyAspNet("{**rest}");
+	app.MapLegacyAspNet("forms/{**rest}");
 
 	//app.MapCoreForms("{**rest}");
 
